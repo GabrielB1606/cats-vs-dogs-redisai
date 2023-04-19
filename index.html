@@ -29,6 +29,9 @@
             <canvas id="canvas" width="400" height="400" style="max-width: 100%;"></canvas>
             <canvas id="otrocanvas" width="150" height="150" style="display: none"></canvas>
             <div id="resultado"></div>            
+            <div class="slidecontainer">
+              <input type="range" min="1" max="50" value="50" class="slider" id="confidence">
+            </div>
           </div>
         </div>
       </div>
@@ -150,10 +153,14 @@
         var resultado = modelo.predict(tensor).dataSync();
 
         var respuesta;
-        if (resultado <= .5) {
+        var confidence_level = 0.01*document.getElementById("confidence").value;
+        // console.log(confidence_level);
+        if (resultado < confidence_level) {
           respuesta = "Gato";
-        } else {
+        } else if(resultado > 1-confidence_level) {
           respuesta = "Perro";
+        }else{
+          respuesta = "?";
         }
         document.getElementById("resultado").innerHTML = respuesta;
 
